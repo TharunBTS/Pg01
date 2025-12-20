@@ -1,0 +1,18 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.Admin;
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.entity.PgPlace;
+
+import java.util.List;
+
+public interface AdminService {
+
+    Admin registerAdmin(Admin admin);
+
+    List<Owner> getAllOwners();
+    List<PgPlace> getAllPgs();
+
+    void deleteOwner(Long ownerId);
+    void deletePg(Long pgId);
+}
