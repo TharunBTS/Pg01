@@ -1,0 +1,19 @@
+package com.pg.accommodation.repository;
+
+import com.pg.accommodation.entity.AvailabilityStatus;
+import com.pg.accommodation.entity.PgPlace;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface PgPlaceRepository extends JpaRepository<PgPlace, Long> {
+
+    // 1️⃣ Find PGs by city & status
+    List<PgPlace> findByCityAndStatus(String city, AvailabilityStatus status);
+
+    // 2️⃣ Find PGs by locality & status
+    List<PgPlace> findByLocalityAndStatus(String locality, AvailabilityStatus status);
+
+    // 3️⃣ Find PGs by owner
+    List<PgPlace> findByOwnerId(Long ownerId);
+}
