@@ -1,0 +1,10 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.Owner;
+
+public interface OwnerService {
+
+    Owner getOwnerById(Long ownerId);
+
+    Owner saveOwner(Owner owner);
+}
