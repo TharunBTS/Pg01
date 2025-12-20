@@ -1,0 +1,53 @@
+package com.pg.accommodation.controller;
+
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.entity.PgPlace;
+import com.pg.accommodation.service.OwnerService;
+import com.pg.accommodation.service.PgPlaceService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/pg")
+public class PgController {
+
+    private final PgPlaceService pgPlaceService;
+    private final OwnerService ownerService;
+
+    public PgController(PgPlaceService pgPlaceService,
+                        OwnerService ownerService) {
+        this.pgPlaceService = pgPlaceService;
+        this.ownerService = ownerService;
+    }
+
+    // 1️⃣ Retrieve available PGs in a city
+    @GetMapping("/{city}")
+    public List<PgPlace> getPgByCity(@PathVariable String city) {
+        return pgPlaceService.getAvailablePgByCity(city);
+    }
+
+    // 2️⃣ Retrieve available PGs in a locality
+    @GetMapping("/locality/{locality}")
+    public List<PgPlace> getPgByLocality(@PathVariable String locality) {
+        return pgPlaceService.getAvailablePgByLocality(locality);
+    }
+
+    // 3️⃣ Retrieve PG details by ID
+    @GetMapping("/details/{id}")
+    public PgPlace getPgDetails(@PathVariable Long id) {
+        return pgPlaceService.getPgById(id);
+    }
+
+    // 4️⃣ Retrieve owner details of a PG
+    @GetMapping("/owner/{pgId}")
+    public Owner getOwnerOfPg(@PathVariable Long pgId) {
+        PgPlace pg = pgPlaceService.getPgById(pgId);
+
+        // Business rule: hide owner if occupied
+        if (pg.getStatus().name().equals("OCCUPIED")) {
+            throw new RuntimeException("PG is occupied. Owner details are hidden.");
+        }
+        return pg.getOwner();
+    }
+}
