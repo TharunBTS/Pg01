@@ -1,0 +1,7 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.Tenant;
+
+public interface TenantService {
+    Tenant registerTenant(Tenant tenant);
+}
