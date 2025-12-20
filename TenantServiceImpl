@@ -1,0 +1,27 @@
+package com.pg.accommodation.service.impl;
+
+import com.pg.accommodation.entity.Tenant;
+import com.pg.accommodation.exception.BusinessException;
+import com.pg.accommodation.repository.TenantRepository;
+import com.pg.accommodation.service.TenantService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TenantServiceImpl implements TenantService {
+
+    private final TenantRepository tenantRepository;
+
+    public TenantServiceImpl(TenantRepository tenantRepository) {
+        this.tenantRepository = tenantRepository;
+    }
+
+    @Override
+    public Tenant registerTenant(Tenant tenant) {
+
+        if (tenant.getAge() < 18) {
+            throw new BusinessException("Tenant must be at least 18 years old");
+        }
+
+        return tenantRepository.save(tenant);
+    }
+}
