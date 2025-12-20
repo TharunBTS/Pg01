@@ -1,0 +1,22 @@
+package com.pg.accommodation.controller;
+
+import com.pg.accommodation.entity.Tenant;
+import com.pg.accommodation.service.TenantService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/tenant")
+public class TenantController {
+
+    private final TenantService tenantService;
+
+    public TenantController(TenantService tenantService) {
+        this.tenantService = tenantService;
+    }
+
+    // ✅ Tenant Registration
+    @PostMapping("/register")
+    public Tenant registerTenant(@RequestBody Tenant tenant) {
+        return tenantService.registerTenant(tenant);
+    }
+}
