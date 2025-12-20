@@ -1,0 +1,66 @@
+package com.pg.accommodation.service.impl;
+
+import com.pg.accommodation.entity.Admin;
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.entity.PgPlace;
+import com.pg.accommodation.exception.BusinessException;
+import com.pg.accommodation.exception.ResourceNotFoundException;
+import com.pg.accommodation.repository.AdminRepository;
+import com.pg.accommodation.repository.OwnerRepository;
+import com.pg.accommodation.repository.PgPlaceRepository;
+import com.pg.accommodation.service.AdminService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+    private final AdminRepository adminRepository;
+    private final OwnerRepository ownerRepository;
+    private final PgPlaceRepository pgPlaceRepository;
+
+    public AdminServiceImpl(AdminRepository adminRepository,
+                            OwnerRepository ownerRepository,
+                            PgPlaceRepository pgPlaceRepository) {
+        this.adminRepository = adminRepository;
+        this.ownerRepository = ownerRepository;
+        this.pgPlaceRepository = pgPlaceRepository;
+    }
+
+    @Override
+    public Admin registerAdmin(Admin admin) {
+
+        if (admin.getAge() < 18) {
+            throw new BusinessException("Admin must be at least 18 years old");
+        }
+
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    public List<Owner> getAllOwners() {
+        return ownerRepository.findAll();
+    }
+
+    @Override
+    public List<PgPlace> getAllPgs() {
+        return pgPlaceRepository.findAll();
+    }
+
+    @Override
+    public void deleteOwner(Long ownerId) {
+        if (!ownerRepository.existsById(ownerId)) {
+            throw new ResourceNotFoundException("Owner not found");
+        }
+        ownerRepository.deleteById(ownerId);
+    }
+
+    @Override
+    public void deletePg(Long pgId) {
+        if (!pgPlaceRepository.existsById(pgId)) {
+            throw new ResourceNotFoundException("PG not found");
+        }
+        pgPlaceRepository.deleteById(pgId);
+    }
+}
