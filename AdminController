@@ -1,0 +1,52 @@
+package com.pg.accommodation.controller;
+
+import com.pg.accommodation.entity.Admin;
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.entity.PgPlace;
+import com.pg.accommodation.service.AdminService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+
+    private final AdminService adminService;
+
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    // ✅ Admin registration
+    @PostMapping("/register")
+    public Admin register(@RequestBody Admin admin) {
+        return adminService.registerAdmin(admin);
+    }
+
+    // ✅ View all owners
+    @GetMapping("/owners")
+    public List<Owner> getOwners() {
+        return adminService.getAllOwners();
+    }
+
+    // ✅ View all PGs
+    @GetMapping("/pgs")
+    public List<PgPlace> getPgs() {
+        return adminService.getAllPgs();
+    }
+
+    // ✅ Delete owner
+    @DeleteMapping("/owner/{id}")
+    public String deleteOwner(@PathVariable Long id) {
+        adminService.deleteOwner(id);
+        return "Owner deleted successfully";
+    }
+
+    // ✅ Delete PG
+    @DeleteMapping("/pg/{id}")
+    public String deletePg(@PathVariable Long id) {
+        adminService.deletePg(id);
+        return "PG deleted successfully";
+    }
+}
