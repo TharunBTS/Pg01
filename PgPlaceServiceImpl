@@ -1,0 +1,83 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.AvailabilityStatus;
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.entity.PgPlace;
+import com.pg.accommodation.repository.PgPlaceRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PgPlaceServiceImpl implements PgPlaceService {
+
+    private final PgPlaceRepository pgPlaceRepository;
+    private final OwnerService ownerService;
+
+    public PgPlaceServiceImpl(PgPlaceRepository pgPlaceRepository,
+                              OwnerService ownerService) {
+        this.pgPlaceRepository = pgPlaceRepository;
+        this.ownerService = ownerService;
+    }
+
+    @Override
+    public List<PgPlace> getAvailablePgByCity(String city) {
+        return pgPlaceRepository.findByCityAndStatus(city, AvailabilityStatus.AVAILABLE);
+    }
+
+    @Override
+    public List<PgPlace> getAvailablePgByLocality(String locality) {
+        return pgPlaceRepository.findByLocalityAndStatus(locality, AvailabilityStatus.AVAILABLE);
+    }
+
+    @Override
+    public PgPlace getPgById(Long id) {
+        return pgPlaceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PG not found"));
+    }
+
+    @Override
+    public PgPlace addPgPlace(PgPlace pgPlace, Long ownerId) {
+        Owner owner = ownerService.getOwnerById(ownerId);
+        pgPlace.setOwner(owner);
+        pgPlace.setStatus(AvailabilityStatus.AVAILABLE);
+        return pgPlaceRepository.save(pgPlace);
+    }
+
+    @Override
+    public List<PgPlace> getPgByOwner(Long ownerId) {
+        return pgPlaceRepository.findByOwnerId(ownerId);
+    }
+
+    @Override
+    public PgPlace updateAvailability(Long pgId) {
+        PgPlace pg = getPgById(pgId);
+
+        if (pg.getStatus() == AvailabilityStatus.AVAILABLE) {
+            pg.setStatus(AvailabilityStatus.OCCUPIED);
+        } else {
+            pg.setStatus(AvailabilityStatus.AVAILABLE);
+        }
+
+        return pgPlaceRepository.save(pg);
+    }
+
+    @Override
+    public PgPlace updatePg(Long pgId, PgPlace updatedPg) {
+        PgPlace existingPg = getPgById(pgId);
+
+        existingPg.setName(updatedPg.getName());
+        existingPg.setCity(updatedPg.getCity());
+        existingPg.setLocality(updatedPg.getLocality());
+        existingPg.setRent(updatedPg.getRent());
+        existingPg.setBuiltUpArea(updatedPg.getBuiltUpArea());
+
+        return pgPlaceRepository.save(existingPg);
+    }
+
+    @Override
+    public void deletePg(Long pgId) {
+        PgPlace pg = getPgById(pgId);
+        pgPlaceRepository.delete(pg);
+    }
+}
