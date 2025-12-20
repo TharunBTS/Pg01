@@ -1,0 +1,24 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.PgPlace;
+
+import java.util.List;
+
+public interface PgPlaceService {
+
+    List<PgPlace> getAvailablePgByCity(String city);
+
+    List<PgPlace> getAvailablePgByLocality(String locality);
+
+    PgPlace getPgById(Long id);
+
+    PgPlace addPgPlace(PgPlace pgPlace, Long ownerId);
+
+    List<PgPlace> getPgByOwner(Long ownerId);
+
+    PgPlace updateAvailability(Long pgId);
+
+    PgPlace updatePg(Long pgId, PgPlace updatedPg);
+
+    void deletePg(Long pgId);
+}
