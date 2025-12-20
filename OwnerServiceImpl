@@ -1,0 +1,26 @@
+package com.pg.accommodation.service;
+
+import com.pg.accommodation.entity.Owner;
+import com.pg.accommodation.repository.OwnerRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OwnerServiceImpl implements OwnerService {
+
+    private final OwnerRepository ownerRepository;
+
+    public OwnerServiceImpl(OwnerRepository ownerRepository) {
+        this.ownerRepository = ownerRepository;
+    }
+
+    @Override
+    public Owner getOwnerById(Long ownerId) {
+        return ownerRepository.findById(ownerId)
+                .orElseThrow(() -> new RuntimeException("Owner not found"));
+    }
+
+    @Override
+    public Owner saveOwner(Owner owner) {
+        return ownerRepository.save(owner);
+    }
+}
