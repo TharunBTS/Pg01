@@ -1,0 +1,51 @@
+package com.pg.accommodation.controller;
+
+import com.pg.accommodation.entity.PgPlace;
+import com.pg.accommodation.service.PgPlaceService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/owner/places")
+public class OwnerController {
+
+    private final PgPlaceService pgPlaceService;
+
+    public OwnerController(PgPlaceService pgPlaceService) {
+        this.pgPlaceService = pgPlaceService;
+    }
+
+    // 5️⃣ Add a new PG place
+    @PostMapping("/add/{ownerId}")
+    public PgPlace addPg(@RequestBody PgPlace pgPlace,
+                         @PathVariable Long ownerId) {
+        return pgPlaceService.addPgPlace(pgPlace, ownerId);
+    }
+
+    // 6️⃣ Retrieve all PGs added by owner
+    @GetMapping("/{ownerId}")
+    public List<PgPlace> getOwnerPgs(@PathVariable Long ownerId) {
+        return pgPlaceService.getPgByOwner(ownerId);
+    }
+
+    // 7️⃣ Change PG availability
+    @PutMapping("/{pgId}/status")
+    public PgPlace changeAvailability(@PathVariable Long pgId) {
+        return pgPlaceService.updateAvailability(pgId);
+    }
+
+    // 8️⃣ Edit PG details
+    @PutMapping("/edit/{pgId}")
+    public PgPlace editPg(@PathVariable Long pgId,
+                          @RequestBody PgPlace pgPlace) {
+        return pgPlaceService.updatePg(pgId, pgPlace);
+    }
+
+    // 9️⃣ Delete PG
+    @DeleteMapping("/delete/{pgId}")
+    public String deletePg(@PathVariable Long pgId) {
+        pgPlaceService.deletePg(pgId);
+        return "PG deleted successfully";
+    }
+}
