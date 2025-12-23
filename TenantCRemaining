@@ -1,0 +1,5 @@
+@PostMapping("/{tenantId}/occupy/{pgId}")
+public Tenant occupyPg(@PathVariable Long tenantId,
+                       @PathVariable Long pgId) {
+    return tenantService.assignPgToTenant(tenantId, pgId);
+}
