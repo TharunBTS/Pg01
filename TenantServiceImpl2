@@ -1,0 +1,21 @@
+@Override
+public Tenant assignPgToTenant(Long tenantId, Long pgId) {
+
+    Tenant tenant = tenantRepository.findById(tenantId)
+            .orElseThrow(() -> new ResourceNotFoundException("Tenant not found"));
+
+    PgPlace pg = pgPlaceRepository.findById(pgId)
+            .orElseThrow(() -> new ResourceNotFoundException("PG not found"));
+
+    if (pg.getStatus() == PgStatus.OCCUPIED) {
+        throw new BusinessException("PG is already occupied");
+    }
+
+    // ✅ Assign PG
+    tenant.setPgPlace(pg);
+    pg.setTenant(tenant);
+    pg.setStatus(PgStatus.OCCUPIED);
+
+    pgPlaceRepository.save(pg);
+    return tenantRepository.save(tenant);
+}
